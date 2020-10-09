@@ -1,0 +1,6 @@
+framework module Pods_HandyList {
+  umbrella header "Pods-HandyList-umbrella.h"
+
+  export *
+  module * { export * }
+}
