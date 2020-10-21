@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
 class CategoryTableViewController: SwipeTableViewController {
     
@@ -40,6 +41,8 @@ class CategoryTableViewController: SwipeTableViewController {
     func loadCategories() {
         
         categories = realm.objects(Category.self)
+        
+        tableView.reloadData()
     }
     
     //MARK: - Delete Data From Swipe:
@@ -67,6 +70,7 @@ class CategoryTableViewController: SwipeTableViewController {
             
             let newCategory = Category()
             newCategory.name = textField.text!
+            newCategory.colour = UIColor.randomFlat().hexValue()
             
             self.save(category: newCategory)
         }
@@ -87,8 +91,14 @@ class CategoryTableViewController: SwipeTableViewController {
         //This would be inheriting the Swipe cell from the Super class on the SwipeTableViewController
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
-        cell.textLabel?.text = categories?[indexPath.row].name ?? " - No Categories Added Yet - "
-        //cell.delegate = self
+        if let category = categories?[indexPath.row] {
+            cell.textLabel?.text = category.name ?? " - No Categories Added Yet - "
+            //cell.delegate = self
+            
+            cell.backgroundColor = UIColor(hexString: category.colour ?? "1D9BF6")
+        }
+        
+        
         
         return cell
     }

@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import RealmSwift
+import ChameleonFramework
 
 //    This is to open realm /Users/christianlorenzo/Library/Developer/CoreSimulator/Devices/5D88ECDB-6B4F-43F6-A21E-5092B27FD52A/data/Containers/Data/Application/A7663F2E-4891-4638-A619-EAACA4633C5D/Documents/default.realm
 
@@ -41,6 +42,8 @@ class TodoListTableViewController: SwipeTableViewController {
         }
     }
     
+    @IBOutlet weak var searchBarOutlet: UISearchBar!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -48,6 +51,29 @@ class TodoListTableViewController: SwipeTableViewController {
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
         tableView.rowHeight = 80.0
+        
+        tableView.separatorStyle = .none
+        
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if let colourHex = selectedCategory?.colour {
+            
+            title = selectedCategory!.name
+            guard let navBar = navigationController?.navigationBar else { fatalError("Navigation Controller does not exist")}
+            
+            if let navBarColor = UIColor(hexString: colourHex) {
+                navBar.backgroundColor = navBarColor
+                
+                navBar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
+                
+                navBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: ContrastColorOf(navBarColor, returnFlat: true)]
+                
+                searchBarOutlet.barTintColor = navBarColor
+            }
+            
+        }
     }
     
     // MARK: - Table view data source
@@ -60,6 +86,10 @@ class TodoListTableViewController: SwipeTableViewController {
             
             cell.textLabel?.text = item.title
             
+            if let colour = UIColor(hexString: selectedCategory!.colour)?.darken(byPercentage: CGFloat(indexPath.row) / CGFloat(todoItems!.count)) {
+                cell.backgroundColor = colour
+                cell.textLabel?.textColor = ContrastColorOf(colour, returnFlat: true)
+            }
             //Ternary operator to save the code written on the if else below:
             //value = condition ? valueIfTrue : valueIfFalse
             //cell.accessoryType = item.done == true ? .checkmark : .none

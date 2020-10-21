@@ -12,7 +12,7 @@ import RealmSwift
 class Category: Object {
     
     @objc dynamic var name: String = ""
-    
+    @objc dynamic var colour: String = ""
     
     //Relationships: From Category to Items. And from the Items file we have to point back to the Category file. 
     
