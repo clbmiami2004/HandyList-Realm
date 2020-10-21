@@ -24,6 +24,11 @@ class CategoryTableViewController: SwipeTableViewController {
         tableView.rowHeight = 80.0
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        guard let navBar = navigationController?.navigationBar else { fatalError("Navigation Controller does not exist")}
+        navBar.backgroundColor = UIColor(hexString: "1D9BF6")
+    }
+    
     //MARK: - Data Manipulation Methods:
     
     func save(category: Category) {
